@@ -1,9 +1,11 @@
 fastapi
 uvicorn
+gunicorn
 xgboost
 pandas
 numpy
+scipy
 dill
 joblib
 matplotlib
-gunicorn
+typing-extensions
