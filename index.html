@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fire Prediction Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        input { width: 80px; margin: 5px; }
+        button { margin: 10px 0; }
+        pre { background: #f0f0f0; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Fire Size Prediction</h2>
+    <form id="featureForm">
+        Temp (F): <input type="number" id="temp_max_F" value="82"><br>
+        Humidity (%): <input type="number" id="humidity_pct" value="35"><br>
+        Windspeed (mph): <input type="number" id="windspeed_mph" value="12"><br>
+        Precip (in): <input type="number" id="precip_in" value="0"><br>
+        NDVI: <input type="number" id="ndvi" value="2800"><br>
+        Population density: <input type="number" id="pop_density" value="150"><br>
+        Slope: <input type="number" id="slope" value="450"><br>
+        <button type="button" onclick="getPrediction()">Predict</button>
+        <button type="button" onclick="getExplanation()">Explain</button>
+    </form>
+
+    <h3>Output</h3>
+    <pre id="output"></pre>
+
+    <script>
+        const serverURL = "http://127.0.0.1:8000";  // change to cloud URL later
+
+        function collectFeatures() {
+            return {
+                temp_max_F: parseFloat(document.getElementById("temp_max_F").value),
+                humidity_pct: parseFloat(document.getElementById("humidity_pct").value),
+                windspeed_mph: parseFloat(document.getElementById("windspeed_mph").value),
+                precip_in: parseFloat(document.getElementById("precip_in").value),
+                ndvi: parseFloat(document.getElementById("ndvi").value),
+                pop_density: parseFloat(document.getElementById("pop_density").value),
+                slope: parseFloat(document.getElementById("slope").value)
+            };
+        }
+
+        async function getPrediction() {
+            const features = collectFeatures();
+            const response = await fetch(serverURL + "/predict", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(features)
+            });
+            const data = await response.json();
+            document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function getExplanation() {
+            const features = collectFeatures();
+            const response = await fetch(serverURL + "/explain", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(features)
+            });
+            const data = await response.json();
+            document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>
