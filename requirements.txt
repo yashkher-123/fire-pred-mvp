@@ -9,3 +9,5 @@ dill
 joblib
 matplotlib
 typing-extensions
+scikit-learn
+lime
